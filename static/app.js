@@ -2,7 +2,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 const show = v => typeof v === "boolean" ? (v ? "Yes" : "No") : v;
 const table = rows => "<table>" + rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(show(v))}</td></tr>`).join("") + "</table>";
-const FIELDS = ["pre", "ino", "post", "str_a", "str_b", "find", "set_a", "set_b", "dfa", "dfa_source", "dfa_custom"];
+const FIELDS = ["pre", "ino", "post", "str_a", "str_b", "find", "set_a", "set_b"];
 
 // Sidebar toggle
 $("#toggle-sidebar").onclick = () => {

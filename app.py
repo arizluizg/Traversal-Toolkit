@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 @app.get("/")
 def index():
-    return render_template("index.html", default_dfa=dfa.DEFAULT)
+    return render_template("index.html")
 
 
 @app.get("/api/samples")
@@ -36,10 +36,18 @@ def analyze():
             strings=text_ops.string_ops(str_a_val, str_b_val, d.get("find", "")),
             string_extras=string_extra.string_extra_ops(str_a_val, str_b_val),
             sets=set_ops.set_ops(a or da, b or db),
-            dfa=dfa.run(d.get("dfa", dfa.DEFAULT), text),
         )
     except (ValueError, KeyError) as e:
         return jsonify(error=str(e) if isinstance(e, ValueError) else "Invalid option."), 400
+
+
+@app.post("/api/regex")
+def regex():
+    d = request.get_json(force=True)
+    try:
+        return jsonify(regex_ops.run(d.get("regex", ""), d.get("text", "")))
+    except ValueError as e:
+        return jsonify(error=str(e)), 400
 
 
 if __name__ == "__main__":

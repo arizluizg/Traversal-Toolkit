@@ -10,7 +10,7 @@
 <header>
   <button id="toggle-sidebar" class="sidebar-toggle">☰</button>
   <h1>Traversal Toolkit</h1>
-  <p>Enter tree traversals, then explore the tree, strings, sets and a DFA built from them.</p>
+  <p>Enter tree traversals, then explore the tree, strings, sets and regular operations.</p>
 </header>
 <aside id="sidebar" class="sidebar open">
   <nav>
@@ -58,7 +58,8 @@
       <label>Test string <input id="dfa_string" placeholder="Enter test string"></label>
       <button id="dfa-analyze">Run DFA</button>
     </div>
-    <div id="out-dfa"></div>
+    <p id="re_error" class="no" role="alert"></p>
+    <div id="out-re"></div>
   </section>
 </main>
 <script src="{{ url_for('static', filename='app.js') }}"></script>

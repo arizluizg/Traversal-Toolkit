@@ -2,7 +2,7 @@ import pytest
 
 from traversal_toolkit import dfa, set_ops, string_extra, text_ops, tree
 
-PRE, INO, POST = "A B D E C F".split(), "D B E A F C".split(), "D E B F C A".split()
+PRE, INO, POST = ["A", "B", "D", "E", "C", "F"], ["D", "B", "E", "A", "F", "C"], ["D", "E", "B", "F", "C", "A"]
 
 
 def test_build_from_pre_in():
