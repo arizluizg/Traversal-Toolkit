@@ -1,7 +1,7 @@
 """Traversal Toolkit web app.  Run:  python app.py  ->  http://127.0.0.1:5000"""
 from flask import Flask, jsonify, render_template, request, send_from_directory
 
-from traversal_toolkit import regex_ops, set_ops, text_ops, tree
+from traversal_toolkit import dfa, set_ops, string_extra, text_ops, tree
 
 app = Flask(__name__)
 
@@ -27,11 +27,14 @@ def analyze():
         join = lambda k: "".join(trav[k])
         a, b = tree.tokens(d.get("set_a", "")), tree.tokens(d.get("set_b", ""))
         da, db = set_ops.default_sets(root)
+        src = d.get("dfa_source", "preorder")
+        text = d.get("dfa_custom", "").strip() if src == "custom" else join(src)
+        str_a_val = join(d.get("str_a", "preorder"))
+        str_b_val = join(d.get("str_b", "postorder"))
         return jsonify(
-            tree=tree.to_dict(root), inorder=trav["inorder"], traversals=trav,
-            summary=tree.summary(root),
-            strings=text_ops.string_ops(join(d.get("str_a", "preorder")),
-                                        join(d.get("str_b", "postorder")), d.get("find", "")),
+            tree=tree.to_dict(root), inorder=trav["inorder"], summary=tree.summary(root),
+            strings=text_ops.string_ops(str_a_val, str_b_val, d.get("find", "")),
+            string_extras=string_extra.string_extra_ops(str_a_val, str_b_val),
             sets=set_ops.set_ops(a or da, b or db),
         )
     except (ValueError, KeyError) as e:
