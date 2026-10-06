@@ -26,3 +26,6 @@ td{font-family:ui-monospace,Consolas,monospace;word-break:break-all}
 .tree{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fafcfd}
 pre{background:#fafcfd;border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto}
 .ok{color:var(--ok)}.no{color:var(--bad)}
+
+h3{margin:18px 0 4px;font-size:1rem}
+code{background:#eef3f5;padding:1px 5px;border-radius:4px}

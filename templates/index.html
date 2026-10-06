@@ -9,7 +9,7 @@
 <body>
 <header>
   <h1>Traversal Toolkit</h1>
-  <p>Enter tree traversals, then explore the tree, strings, sets and a DFA built from them.</p>
+  <p>Enter tree traversals, then explore the tree, strings, sets and regular operations.</p>
 </header>
 <main>
   <section class="input">
@@ -27,7 +27,7 @@
     <button class="active" data-tab="tree">Binary Tree</button>
     <button data-tab="str">String Operators</button>
     <button data-tab="set">Sets</button>
-    <button data-tab="dfa">DFA</button>
+    <button data-tab="re">Regular Operations</button>
   </nav>
 
   <section class="panel active" id="tab-tree"><div id="out-tree"><p class="hint">Analyze a tree to see it here.</p></div></section>
@@ -51,16 +51,28 @@
     <div id="out-set"></div>
   </section>
 
-  <section class="panel" id="tab-dfa">
-    <label>DFA definition <textarea id="dfa" spellcheck="false">{{ default_dfa }}</textarea></label>
+  <section class="panel" id="tab-re">
+    <p class="hint">Operators: <code>*</code> Kleene star, <code>+</code> Kleene plus, <code>|</code> alternation,
+      <code>( )</code> grouping, and writing symbols side by side is concatenation. Precedence: <code>( )</code> &gt; <code>* +</code> &gt; concatenation &gt; <code>|</code>.
+      Escape an operator with <code>\</code>.</p>
+    <div class="row">
+      <label>Regular expression <input id="regex" value="(a|b)*abb" size="26" spellcheck="false"></label>
+      <label>Examples
+        <select id="re_example"><option value="">Pick one</option>
+          <option>ab</option><option>a*</option><option>a+</option><option>a|b</option>
+          <option>(ab)*</option><option>(a|b)*abb</option><option>a(b|c)+d</option><option>(a|b)+(c|d)*</option>
+        </select>
+      </label>
+    </div>
     <div class="row">
       <label>Test string
-        <select id="dfa_source"><option>preorder</option><option>inorder</option><option>postorder</option><option>custom</option></select>
+        <select id="re_source"><option>preorder</option><option>inorder</option><option>postorder</option><option selected>custom</option></select>
       </label>
-      <label>Custom string <input id="dfa_custom"></label>
-      <button class="rerun">Run DFA</button>
+      <label>Custom string <input id="re_custom" value="abb" spellcheck="false"></label>
+      <button id="re_run">Run</button>
     </div>
-    <div id="out-dfa"></div>
+    <p id="re_error" class="no" role="alert"></p>
+    <div id="out-re"></div>
   </section>
 </main>
 <script src="{{ url_for('static', filename='app.js') }}"></script>
