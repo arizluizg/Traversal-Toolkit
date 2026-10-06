@@ -1,7 +1,7 @@
 """Traversal Toolkit web app.  Run:  python app.py  ->  http://127.0.0.1:5000"""
 from flask import Flask, jsonify, render_template, request, send_from_directory
 
-from traversal_toolkit import dfa, set_ops, string_extra, text_ops, tree
+from traversal_toolkit import regex_ops, set_ops, string_extra, text_ops, tree
 
 app = Flask(__name__)
 
