@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "traversal-toolkit"
+version = "1.0.0"
+description = "Binary tree, string, set and DFA lessons driven by tree traversals"
+requires-python = ">=3.9"
+dependencies = ["flask>=3.0"]
+
+[tool.setuptools]
+packages = ["traversal_toolkit"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

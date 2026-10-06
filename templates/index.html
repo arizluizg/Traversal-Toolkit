@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Traversal Toolkit</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>Traversal Toolkit</h1>
+  <p>Enter tree traversals, then explore the tree, strings, sets and a DFA built from them.</p>
+</header>
+<main>
+  <section class="input">
+    <label>Preorder <input id="pre" placeholder="A B D E C F"></label>
+    <label>Inorder <input id="ino" placeholder="D B E A F C"></label>
+    <label>Postorder <input id="post" placeholder="D E B F C A"></label>
+    <div class="row">
+      <select id="example" aria-label="Examples"><option value="">Load an example</option></select>
+      <button id="go">Analyze</button>
+    </div>
+    <p id="error" role="alert"></p>
+  </section>
+
+  <nav class="tabs">
+    <button class="active" data-tab="tree">Binary Tree</button>
+    <button data-tab="str">String Operators</button>
+    <button data-tab="set">Sets</button>
+    <button data-tab="dfa">DFA</button>
+  </nav>
+
+  <section class="panel active" id="tab-tree"><div id="out-tree"><p class="hint">Analyze a tree to see it here.</p></div></section>
+
+  <section class="panel" id="tab-str">
+    <div class="row">
+      <label>String A <select id="str_a"><option>preorder</option><option>inorder</option><option>postorder</option></select></label>
+      <label>String B <select id="str_b"><option>preorder</option><option>inorder</option><option selected>postorder</option></select></label>
+      <label>Find / replace <input id="find" size="6"></label>
+      <button class="rerun">Run</button>
+    </div>
+    <div id="out-str"></div>
+  </section>
+
+  <section class="panel" id="tab-set">
+    <div class="row">
+      <label>Set A <input id="set_a" placeholder="blank = left subtree + root"></label>
+      <label>Set B <input id="set_b" placeholder="blank = right subtree + root"></label>
+      <button class="rerun">Run</button>
+    </div>
+    <div id="out-set"></div>
+  </section>
+
+  <section class="panel" id="tab-dfa">
+    <label>DFA definition <textarea id="dfa" spellcheck="false">{{ default_dfa }}</textarea></label>
+    <div class="row">
+      <label>Test string
+        <select id="dfa_source"><option>preorder</option><option>inorder</option><option>postorder</option><option>custom</option></select>
+      </label>
+      <label>Custom string <input id="dfa_custom"></label>
+      <button class="rerun">Run DFA</button>
+    </div>
+    <div id="out-dfa"></div>
+  </section>
+</main>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

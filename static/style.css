@@ -1,0 +1,28 @@
+:root{--bg:#f2f5f7;--card:#fff;--ink:#14262f;--mute:#5b6e79;--line:#d6dee4;--acc:#0e7c86;--bad:#b3261e;--ok:#1b7f4b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,"Segoe UI",sans-serif}
+header,main{max-width:960px;margin:0 auto;padding:20px}
+header{padding-bottom:0}
+h1{margin:0;font-size:1.8rem;letter-spacing:-.02em}
+header p,.hint{color:var(--mute);margin:.25rem 0 0}
+.input,.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px}
+.input{display:grid;gap:10px}
+label{display:grid;gap:4px;font-weight:600;font-size:.9rem}
+input,select,textarea{font:inherit;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:#fff;color:inherit}
+textarea{font-family:ui-monospace,Consolas,monospace;width:100%;min-height:130px}
+button{font:inherit;font-weight:600;padding:8px 16px;border:0;border-radius:6px;background:var(--acc);color:#fff;cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin:10px 0}
+#error{color:var(--bad);margin:0;min-height:1.2em}
+.tabs{display:flex;gap:4px;margin:18px 0 -1px;flex-wrap:wrap}
+.tabs button{background:transparent;color:var(--mute);border:1px solid transparent;border-radius:8px 8px 0 0}
+.tabs button.active{background:var(--card);color:var(--ink);border-color:var(--line);border-bottom-color:var(--card)}
+.panel{display:none;border-radius:0 10px 10px 10px}
+.panel.active{display:block}
+table{border-collapse:collapse;width:100%;margin-top:12px}
+th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{width:38%;font-weight:600;color:var(--mute)}
+td{font-family:ui-monospace,Consolas,monospace;word-break:break-all}
+.tree{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fafcfd}
+pre{background:#fafcfd;border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto}
+.ok{color:var(--ok)}.no{color:var(--bad)}
