@@ -18,7 +18,17 @@ def samples():
 
 @app.post("/api/analyze")
 def analyze():
-    d = request.get_json(force=True)
+    d = request.get_json(force=True) or {}
+    has_tree_input = any(d.get(key) not in (None, "") for key in ("pre", "ino", "post"))
+
+    if not has_tree_input:
+        src = d.get("dfa_source", "custom")
+        text = d.get("dfa_custom", "").strip() if src == "custom" else d.get("dfa", dfa.DEFAULT)
+        try:
+            return jsonify(dfa=dfa.run(d.get("dfa", dfa.DEFAULT), text))
+        except ValueError as e:
+            return jsonify(error=str(e)), 400
+
     try:
         root = tree.build(tree.tokens(d.get("pre", "")), tree.tokens(d.get("ino", "")),
                           tree.tokens(d.get("post", "")))

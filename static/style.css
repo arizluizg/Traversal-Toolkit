@@ -31,6 +31,10 @@ th{width:38%;font-weight:600;color:var(--mute)}
 td{font-family:ui-monospace,Consolas,monospace;word-break:break-all}
 .tree{overflow-x:auto;border:1px solid var(--line);border-radius:8px;background:#fafcfd;margin:20px 0}
 pre{background:#fafcfd;border:1px solid var(--line);border-radius:8px;padding:10px;overflow:auto;margin:20px 0}
+#dfa-output{display:grid;gap:10px;margin-top:12px}
+#dfa-output pre{background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:12px;overflow:auto;margin:0;white-space:pre-wrap;word-break:break-word}
+#dfa-output p{margin:0}
+#dfa-output .hint{color:var(--mute)}
 .ok{color:var(--ok)}.no{color:var(--bad)}
 @media(max-width:768px){
   .sidebar{width:160px}

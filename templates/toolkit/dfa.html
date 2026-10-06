@@ -1,0 +1,9 @@
+<section id="page-dfa" class="page">
+  <label>DFA definition <textarea id="dfa-definition" spellcheck="false">{{ default_dfa }}</textarea></label>
+  <div class="row">
+    <label>Test string <input id="dfa-string" placeholder="Enter test string"></label>
+    <button id="dfa-run">Run DFA</button>
+  </div>
+  <div id="dfa-output"></div>
+</section>
+<script src="{{ url_for('static', filename='dfa.js') }}"></script>
