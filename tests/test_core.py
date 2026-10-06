@@ -1,6 +1,6 @@
 import pytest
 
-from traversal_toolkit import dfa, set_ops, text_ops, tree
+from traversal_toolkit import dfa, set_ops, string_extra, text_ops, tree
 
 PRE, INO, POST = "A B D E C F".split(), "D B E A F C".split(), "D E B F C A".split()
 
@@ -37,3 +37,13 @@ def test_set_ops():
 def test_dfa_even_length():
     assert dfa.run(dfa.DEFAULT, "ABCD")["accepted"] is True
     assert dfa.run(dfa.DEFAULT, "ABC")["accepted"] is False
+
+
+def test_string_extra_ops():
+    rows = dict(string_extra.string_extra_ops("race car", "ABC"))
+    assert rows["Prefix of A"] == "rac"
+    assert rows["Suffix of A"] == "car"
+    assert rows["Reverse of A"] == "rac ecar"
+    assert rows["A is a palindrome (trim spaces, ignore case)"] is True
+    assert rows["Reverse of B"] == "CBA"
+    assert rows["B is a palindrome (trim spaces, ignore case)"] is False
