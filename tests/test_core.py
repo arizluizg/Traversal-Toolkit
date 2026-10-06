@@ -44,6 +44,6 @@ def test_string_extra_ops():
     assert rows["Prefix of A"] == "rac"
     assert rows["Suffix of A"] == "car"
     assert rows["Reverse of A"] == "rac ecar"
-    assert rows["A is a palindrome (trim spaces, ignore case)"] is True
+    assert rows["A is a palindrome"] is True
     assert rows["Reverse of B"] == "CBA"
-    assert rows["B is a palindrome (trim spaces, ignore case)"] is False
+    assert rows["B is a palindrome"] is False

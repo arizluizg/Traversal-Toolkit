@@ -25,5 +25,5 @@ def string_extra_ops(a, b):
         ("Prefix of B", _prefix(b)),
         ("Suffix of B", _suffix(b)),
         ("Reverse of B", b[::-1]),
-        ("B is a palindrome (trim spaces, ignore case)", _is_palindrome(b)),
+        ("B is a palindrome", _is_palindrome(b)),
     ]

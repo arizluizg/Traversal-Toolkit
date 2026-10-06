@@ -49,29 +49,55 @@ async function analyzeTree() {
 }
 
 async function analyzeText() {
-  const text = $("#text-input").value;
-  if (!text) {
-    $("#out-text").innerHTML = "<p class='hint'>Enter text to analyze.</p>";
+  const a = $("#text-input").value;
+  const b = $("#text-input-b").value;
+  
+  if (!a && !b) {
+    $("#out-combined").style.display = "none";
+    $("#results-grid").style.display = "none";
     return;
   }
   
-  const clean = text.toLowerCase().replace(/\s+/g, "");
-  const reversed = clean.split("").reverse().join("");
+  const cleanA = a.toLowerCase().replace(/\s+/g, "");
+  const reversedA = cleanA.split("").reverse().join("");
+  const cleanB = b.toLowerCase().replace(/\s+/g, "");
+  const reversedB = cleanB.split("").reverse().join("");
   
-  // Create string operations results
-  const ops = [
-    ["Text", text],
-    ["Length", text.length],
-    ["Reversed", text.split("").reverse().join("")],
-    ["Is palindrome", clean === reversed],
-    ["Uppercase", text.toUpperCase()],
-    ["Lowercase", text.toLowerCase()],
-    ["First 3 chars", text.substring(0, 3)],
-    ["Last 3 chars", text.substring(text.length - 3)],
-    ["Unique chars", new Set(text).size],
+  // Combined operations
+  const combined = [
+    ["Text A", a],
+    ["Text B", b],
+    ["Concatenation (A + B)", a + b],
+    ["Length A / B", `${a.length} / ${b.length}`],
   ];
   
-  $("#out-text").innerHTML = table(ops);
+  // Text A operations
+  const opsA = [
+    ["Reversed", a.split("").reverse().join("")],
+    ["Is palindrome", cleanA === reversedA],
+    ["Uppercase", a.toUpperCase()],
+    ["Lowercase", a.toLowerCase()],
+    ["First 3 chars", a.substring(0, 3)],
+    ["Last 3 chars", a.substring(a.length - 3)],
+    ["Unique chars", new Set(a).size],
+  ];
+  
+  // Text B operations
+  const opsB = [
+    ["Reversed", b.split("").reverse().join("")],
+    ["Is palindrome", cleanB === reversedB],
+    ["Uppercase", b.toUpperCase()],
+    ["Lowercase", b.toLowerCase()],
+    ["First 3 chars", b.substring(0, 3)],
+    ["Last 3 chars", b.substring(b.length - 3)],
+    ["Unique chars", new Set(b).size],
+  ];
+  
+  $("#out-combined").style.display = "block";
+  $("#results-grid").style.display = "grid";
+  $("#out-combined").innerHTML = table(combined);
+  $("#out-text-a").innerHTML = table(opsA);
+  $("#out-text-b").innerHTML = table(opsB);
 }
 
 async function analyzeSets() {
