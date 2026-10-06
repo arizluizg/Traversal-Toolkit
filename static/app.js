@@ -2,7 +2,7 @@ const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;"}[c]));
 const show = v => typeof v === "boolean" ? (v ? "Yes" : "No") : v;
 const table = rows => "<table>" + rows.map(([k, v]) => `<tr><th>${esc(k)}</th><td>${esc(show(v))}</td></tr>`).join("") + "</table>";
-const FIELDS = ["pre", "ino", "post", "str_a", "str_b", "find", "set_a", "set_b", "dfa", "dfa_source", "dfa_custom"];
+const FIELDS = ["pre", "ino", "post", "str_a", "str_b", "find", "set_a", "set_b"];
 
 function drawTree(root, ino) {
   const xs = Object.fromEntries(ino.map((v, i) => [v, i])), nodes = [], edges = [];
@@ -29,8 +29,30 @@ async function analyze() {
   $("#out-tree").innerHTML = `<div class="tree">${drawTree(d.tree, d.inorder)}</div>` + table(d.summary);
   $("#out-str").innerHTML = table(d.strings);
   $("#out-set").innerHTML = table(d.sets);
-  $("#out-dfa").innerHTML = `<pre>${esc(d.dfa.trace.join("\n"))}</pre>` +
-    `<p class="${d.dfa.accepted ? "ok" : "no"}"><strong>${d.dfa.accepted ? "ACCEPTED" : "REJECTED"}</strong></p>`;
+  lastTrav = d.traversals;
+}
+
+let lastTrav = null;
+const section = (title, body) => `<h3>${title}</h3><pre>${esc(body)}</pre>`;
+
+async function runRegex() {
+  const src = $("#re_source").value;
+  let text = $("#re_custom").value;
+  if (src !== "custom") {
+    if (!lastTrav) { $("#re_error").textContent = "Analyze a tree first, or choose 'custom'."; return; }
+    text = lastTrav[src].join("");
+  }
+  const res = await fetch("/api/regex", {method: "POST", headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({regex: $("#regex").value, text})});
+  const d = await res.json();
+  $("#re_error").textContent = d.error || "";
+  if (d.error) { $("#out-re").innerHTML = ""; return; }
+  $("#out-re").innerHTML =
+    `<p class="${d.accepted ? "ok" : "no"}"><strong>${d.accepted ? "ACCEPTED" : "REJECTED"}</strong></p>` +
+    section("Step-by-step match", d.trace.join("\n")) +
+    section("How the operators combine (syntax tree)", d.tree) +
+    section("Strings in the language (up to length 4" + (d.more ? ", first 30" : "") + ")", d.language.join("   ") || "(none)") +
+    section("Automaton built from the expression (NFA with ε-moves)", d.nfa.join("\n"));
 }
 
 document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
@@ -40,6 +62,10 @@ document.querySelectorAll(".tabs button").forEach(b => b.onclick = () => {
 });
 document.querySelectorAll(".rerun").forEach(b => b.onclick = analyze);
 $("#go").onclick = analyze;
+$("#re_run").onclick = runRegex;
+$("#re_example").onchange = e => { if (e.target.value) { $("#regex").value = e.target.value; runRegex(); } };
+$("#regex").onkeydown = $("#re_custom").onkeydown = e => { if (e.key === "Enter") runRegex(); };
+runRegex();
 
 fetch("/api/samples").then(r => r.json()).then(list => {
   list.forEach((s, i) => $("#example").add(new Option(s.name, i)));
