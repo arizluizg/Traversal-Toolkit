@@ -18,11 +18,12 @@ if (textSection) {
 
   const reverse = (text) => Array.from(text).reverse().join('');
 
-  // Ignores spaces and letter case. Empty text is reported as "No text" instead of "Yes".
+  // Ignores spaces and letter case. Needs at least 2 characters, so one character is not a palindrome.
+  // Empty text is reported as "No text".
   function palindromeAnswer(text) {
     const clean = text.toLowerCase().replace(/\s+/g, '');
     if (!clean) return 'No text';
-    return clean === reverse(clean);
+    return clean.length > 1 && clean === reverse(clean);
   }
 
   function operationsFor(text, prefix, suffix) {

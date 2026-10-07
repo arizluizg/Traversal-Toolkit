@@ -12,6 +12,7 @@ if (setSection) {
   };
 
   const POWER_LIMIT = 10; // 2^10 = 1024 subsets is the most we list on screen
+  const PRODUCT_LIMIT = 200; // most ordered pairs we list on screen
 
   const parse = (text) => new Set(text.split(/[\s,]+/).filter(Boolean));
   const sorted = (values) => Array.from(values).sort((x, y) => x.localeCompare(y, undefined, { numeric: true }));
@@ -39,6 +40,18 @@ if (setSection) {
     return `<div class="set-card">${title}<div class="power-set">${chips}</div></div>`;
   }
 
+  // Ordered pairs (x, y) with x from the left set and y from the right set.
+  function productCard(leftName, rightName, left, right) {
+    const total = left.size * right.size;
+    const title = `<h3>Cartesian product ${leftName} × ${rightName} <small>${total} pair${total === 1 ? '' : 's'}</small></h3>`;
+    if (total > PRODUCT_LIMIT) {
+      return `<div class="set-card">${title}<p class="hint">Too many pairs to list. The limit is ${PRODUCT_LIMIT}.</p></div>`;
+    }
+    const rightItems = sorted(right);
+    const pairs = sorted(left).flatMap((x) => rightItems.map((y) => `<span>(${esc(x)}, ${esc(y)})</span>`));
+    return `<div class="set-card">${title}<div class="chip-list">${pairs.join('') || '<span>∅</span>'}</div></div>`;
+  }
+
   function analyzeSets() {
     const A = parse(setInputs.a.value);
     const B = parse(setInputs.b.value);
@@ -59,7 +72,7 @@ if (setSection) {
       ['|A| / |B|', `${A.size} / ${B.size}`]
     ];
 
-    setInputs.output.innerHTML = table(operations) + powerCard('A', A) + powerCard('B', B);
+    setInputs.output.innerHTML = table(operations) + productCard('A', 'B', A, B) + productCard('B', 'A', B, A) + powerCard('A', A) + powerCard('B', B);
   }
 
   setInputs.run.addEventListener('click', analyzeSets);
