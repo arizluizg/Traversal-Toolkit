@@ -35,33 +35,9 @@
     <div id="out-tree"><p class="hint">Analyze a tree to see it here.</p></div>
   </section>
 
-  <section id="page-text" class="page">
-    <div class="input">
-      <label>Text A <input id="text-input" placeholder="Enter first text"></label>
-      <label>Text B <input id="text-input-b" placeholder="Enter second text"></label>
-      <button id="text-analyze">Analyze</button>
-    </div>
-    <div id="out-combined" style="display:none;border:1px solid var(--line);border-radius:10px;padding:16px;background:var(--card);max-width:1600px;margin:20px auto 0;"></div>
-    <div id="results-grid" style="display:none;grid-template-columns:1fr 1fr;gap:20px;max-width:1600px;margin:20px auto 0;width:100%;">
-      <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;padding:16px;background:var(--card);">
-        <h3 style="margin:0 0 12px 0;color:var(--acc);text-align:center;">Text A</h3>
-        <div id="out-text-a"></div>
-      </div>
-      <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;padding:16px;background:var(--card);">
-        <h3 style="margin:0 0 12px 0;color:var(--acc);text-align:center;">Text B</h3>
-        <div id="out-text-b"></div>
-      </div>
-    </div>
-  </section>
+  {% include 'toolkit/text.html' %}
 
-  <section id="page-set" class="page">
-    <div class="input">
-      <label>Set A <input id="set_a" placeholder="blank = left subtree + root"></label>
-      <label>Set B <input id="set_b" placeholder="blank = right subtree + root"></label>
-      <button id="set-analyze">Run</button>
-    </div>
-    <div id="out-set"></div>
-  </section>
+  {% include 'toolkit/set.html' %}
 
   {% include 'toolkit/regex.html' %}
 </main>

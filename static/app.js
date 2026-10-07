@@ -48,81 +48,8 @@ async function analyzeTree() {
   $("#out-tree").innerHTML = `<div class="tree">${drawTree(d.tree, d.inorder)}</div>` + table(d.summary);
 }
 
-async function analyzeText() {
-  const a = $("#text-input").value;
-  const b = $("#text-input-b").value;
-  
-  if (!a && !b) {
-    $("#out-combined").style.display = "none";
-    $("#results-grid").style.display = "none";
-    return;
-  }
-  
-  const cleanA = a.toLowerCase().replace(/\s+/g, "");
-  const reversedA = cleanA.split("").reverse().join("");
-  const cleanB = b.toLowerCase().replace(/\s+/g, "");
-  const reversedB = cleanB.split("").reverse().join("");
-  
-  // Combined operations
-  const combined = [
-    ["Text A", a],
-    ["Text B", b],
-    ["Concatenation (A + B)", a + b],
-    ["Length A / B", `${a.length} / ${b.length}`],
-  ];
-  
-  // Text A operations
-  const opsA = [
-    ["Reversed", a.split("").reverse().join("")],
-    ["Is palindrome", cleanA === reversedA],
-    ["Uppercase", a.toUpperCase()],
-    ["Lowercase", a.toLowerCase()],
-    ["First 3 chars", a.substring(0, 3)],
-    ["Last 3 chars", a.substring(a.length - 3)],
-    ["Unique chars", new Set(a).size],
-  ];
-  
-  // Text B operations
-  const opsB = [
-    ["Reversed", b.split("").reverse().join("")],
-    ["Is palindrome", cleanB === reversedB],
-    ["Uppercase", b.toUpperCase()],
-    ["Lowercase", b.toLowerCase()],
-    ["First 3 chars", b.substring(0, 3)],
-    ["Last 3 chars", b.substring(b.length - 3)],
-    ["Unique chars", new Set(b).size],
-  ];
-  
-  $("#out-combined").style.display = "block";
-  $("#results-grid").style.display = "grid";
-  $("#out-combined").innerHTML = table(combined);
-  $("#out-text-a").innerHTML = table(opsA);
-  $("#out-text-b").innerHTML = table(opsB);
-}
-
-async function analyzeSets() {
-  const a = $("#set_a").value.split(/[\s,]+/).filter(x => x);
-  const b = $("#set_b").value.split(/[\s,]+/).filter(x => x);
-  const A = new Set(a), B = new Set(b);
-  const fmt = s => "{" + Array.from(s).sort().join(", ") + "}";
-  
-  const ops = [
-    ["Set A", fmt(A)],
-    ["Set B", fmt(B)],
-    ["Union", fmt(new Set([...A, ...B]))],
-    ["Intersection", fmt(new Set([...A].filter(x => B.has(x))))],
-    ["A - B", fmt(new Set([...A].filter(x => !B.has(x))))],
-    ["B - A", fmt(new Set([...B].filter(x => !A.has(x))))],
-    ["|A| / |B|", `${A.size} / ${B.size}`],
-  ];
-  
-  $("#out-set").innerHTML = table(ops);
-}
-
 // Event listeners
 $("#go").onclick = analyzeTree;
-$("#text-analyze").onclick = analyzeText;
-$("#set-analyze").onclick = analyzeSets;
 
 // Load examples
 fetch("/api/samples").then(r => r.json()).then(list => {
