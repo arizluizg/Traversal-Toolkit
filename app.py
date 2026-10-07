@@ -5,6 +5,9 @@ from traversal_toolkit import regex_ops, set_ops, string_extra, text_ops, tree
 
 app = Flask(__name__)
 
+from traversal_toolkit import expr_tree
+expr_tree.register(app)
+
 
 @app.get("/")
 def index():
