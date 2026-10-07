@@ -216,3 +216,76 @@ def run(regex, s):
         "trace": trace, "accepted": ok,
         "language": [w or "ε" for w in words], "more": more,
     }
+
+
+# ---------- generation: regex -> the strings it produces ----------
+
+CAP = 2000          # stop collecting after this many strings (keeps the page fast)
+MAX_LEN_LIMIT = 10
+
+
+def _flat(n, kind):
+    """Flatten nested binary cat/alt nodes into one list."""
+    return _flat(n[1], kind) + _flat(n[2], kind) if n[0] == kind else [n]
+
+
+def describe(n):
+    """Readable form showing how the operators were grouped, e.g. 'A+ · B · C'."""
+    k = n[0]
+    if k == "sym":
+        return n[1]
+    if k == "cat":
+        return " · ".join(f"({describe(c)})" if c[0] == "alt" else describe(c) for c in _flat(n, "cat"))
+    if k == "alt":
+        return " | ".join(describe(c) for c in _flat(n, "alt"))
+    inner = describe(n[1])
+    if n[1][0] in ("cat", "alt"):
+        inner = f"({inner})"
+    return inner + ("*" if k == "star" else "+")
+
+
+def _join(xs, ys, limit):
+    out = set()
+    for x in xs:
+        for y in ys:
+            if len(x) + len(y) <= limit:
+                out.add(x + y)
+                if len(out) >= CAP:
+                    return out
+    return out
+
+
+def _star(xs, limit):
+    seen = {""}
+    while True:
+        nxt = seen | _join(seen, xs, limit)
+        if len(nxt) == len(seen) or len(nxt) >= CAP:
+            return nxt
+        seen = nxt
+
+
+def _lang(n, limit):
+    k = n[0]
+    if k == "sym":
+        return {n[1]} if limit >= 1 else set()
+    if k == "cat":
+        return _join(_lang(n[1], limit), _lang(n[2], limit), limit)
+    if k == "alt":
+        return _lang(n[1], limit) | _lang(n[2], limit)
+    base = _lang(n[1], limit)
+    rep = _star(base, limit)
+    return rep if k == "star" else _join(base, rep, limit)
+
+
+def generate(regex, max_len=6):
+    """All strings the expression produces up to max_len, shortest first.
+    'A+BC' -> ABC, AABC, AAABC ...  Raises ValueError on a malformed expression."""
+    try:
+        max_len = int(max_len)
+    except (TypeError, ValueError):
+        max_len = 6
+    max_len = max(1, min(max_len, MAX_LEN_LIMIT))
+    tree = parse(regex)
+    words = sorted(_lang(tree, max_len), key=lambda w: (len(w), w))
+    return {"read": describe(tree), "max_len": max_len, "count": len(words),
+            "capped": len(words) >= CAP, "words": words}

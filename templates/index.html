@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Traversal Toolkit</title>
+  <title>Automata Toolkit</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <header>
   <button id="toggle-sidebar" class="sidebar-toggle">☰</button>
-  <h1>Traversal Toolkit</h1>
+  <h1>Automata Toolkit</h1>
   <p>Enter tree traversals, then explore the tree, strings, sets and regular operations.</p>
 </header>
 <aside id="sidebar" class="sidebar open">
@@ -17,7 +17,7 @@
     <button class="sidebar-item active" data-page="tree">Binary Tree</button>
     <button class="sidebar-item" data-page="text">Text Operations</button>
     <button class="sidebar-item" data-page="set">Sets</button>
-    <button class="sidebar-item" data-page="dfa">DFA</button>
+    <button class="sidebar-item" data-page="regex">Regular Operations</button>
   </nav>
 </aside>
 <main>
@@ -37,10 +37,21 @@
 
   <section id="page-text" class="page">
     <div class="input">
-      <label>Enter text <input id="text-input" placeholder="Enter any text"></label>
+      <label>Text A <input id="text-input" placeholder="Enter first text"></label>
+      <label>Text B <input id="text-input-b" placeholder="Enter second text"></label>
       <button id="text-analyze">Analyze</button>
     </div>
-    <div id="out-text"></div>
+    <div id="out-combined" style="display:none;border:1px solid var(--line);border-radius:10px;padding:16px;background:var(--card);max-width:1600px;margin:20px auto 0;"></div>
+    <div id="results-grid" style="display:none;grid-template-columns:1fr 1fr;gap:20px;max-width:1600px;margin:20px auto 0;width:100%;">
+      <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;padding:16px;background:var(--card);">
+        <h3 style="margin:0 0 12px 0;color:var(--acc);text-align:center;">Text A</h3>
+        <div id="out-text-a"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:10px;padding:16px;background:var(--card);">
+        <h3 style="margin:0 0 12px 0;color:var(--acc);text-align:center;">Text B</h3>
+        <div id="out-text-b"></div>
+      </div>
+    </div>
   </section>
 
   <section id="page-set" class="page">
@@ -52,16 +63,12 @@
     <div id="out-set"></div>
   </section>
 
-  <section id="page-dfa" class="page">
-    <label>DFA definition <textarea id="dfa" spellcheck="false">{{ default_dfa }}</textarea></label>
-    <div class="row">
-      <label>Test string <input id="dfa_string" placeholder="Enter test string"></label>
-      <button id="dfa-analyze">Run DFA</button>
-    </div>
-    <p id="re_error" class="no" role="alert"></p>
-    <div id="out-re"></div>
-  </section>
+  {% include 'toolkit/regex.html' %}
 </main>
 <script src="{{ url_for('static', filename='app.js') }}"></script>
+<script src="{{ url_for('static', filename='tree.js') }}"></script>
+<script src="{{ url_for('static', filename='text.js') }}"></script>
+<script src="{{ url_for('static', filename='set.js') }}"></script>
+<script src="{{ url_for('static', filename='regex.js') }}"></script>
 </body>
 </html>

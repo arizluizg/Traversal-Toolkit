@@ -1,121 +1,120 @@
 # Traversal Toolkit
 
-A web app for learning binary trees, string operations, sets, and DFAs. Build a binary tree from preorder/inorder/postorder traversals, then explore tree properties, string operations, set theory, and deterministic finite automata.
+A modular web app for learning binary trees, string operations, sets, and regular operations. The project has been refactored into a cleaner tab-based layout with separate UI sections and independent per-tab logic, while keeping the core toolkit operations accessible from a single Flask app.
+
+## What was implemented
+
+### Modern UI refactor
+- Reworked the app into a collapsible sidebar with separate pages for:
+  - Binary Tree
+  - Text Operations
+  - Sets
+  - Regular Operations
+- Split the interface into reusable template sections in `templates/toolkit/`
+- Split JavaScript behavior by tab into independent files in `static/`
+- Kept the shared app shell and styling in `static/app.js` and `static/style.css`
+- Preserved the sidebar navigation and broad app layout while separating each tool into its own page state
+
+### Independent tab logic
+- Each tool section now has its own independent inputs and handlers
+- The tree tab no longer depends on shared form state
+- The Regular Operations tab has its own input, script, and API route
+- This prevents cross-tab collisions and keeps each module easier to maintain
+
+### Regular Operations
+- Type an expression such as `A+BC` and see the strings it produces (`ABC`, `AABC`, `AAABC`, ...)
+- Supports Kleene star `*`, Kleene plus `+`, alternation `|`, parentheses `( )`, and concatenation
+- Results are grouped by length, with a max-length slider because `*` and `+` repeat forever
+- Shows how the operators were grouped, and explains malformed expressions in plain language
+
+### Styling update
+- Dark UI theme with readable contrast
+- Sidebar, cards, inputs, buttons, and output panels aligned for a consistent interface
+
+## Project structure
+
+- `app.py` – Flask entry point and `/api/analyze` and `/api/regex` routes
+- `traversal_toolkit/` – toolkit logic
+  - `tree.py` – binary tree building and traversal logic
+  - `text_ops.py` – string operations
+  - `string_extra.py` – extra string utilities
+  - `set_ops.py` – set operations
+  - `regex_ops.py` – regular expression parsing and string generation
+- `templates/`
+  - `index.html` – shell layout
+  - `sidebar.html` – sidebar navigation
+  - `toolkit/` – individual page templates for each tool
+- `static/`
+  - `app.js` – page switching and shared shell behavior
+  - `tree.js` – tree tab logic
+  - `text.js` – text tab logic
+  - `set.js` – set tab logic
+  - `regex.js` – Regular Operations tab logic
+  - `style.css` – dark responsive styling
+- `samples/examples.json` – example data
+- `tests/test_core.py` – project tests and regression checks
 
 ## Features
 
 ### Binary Tree
-- Build trees from traversals: preorder + inorder, or postorder + inorder
-- Visualize the tree structure
-- View tree properties: height, leaves, level-order traversal, BST validation
+- Build trees from preorder + inorder or postorder + inorder
+- Visualize output trees
+- Compute tree properties such as height and traversal results
 
 ### Text Operations
-- Single input field for any text
-- Operations: length, reverse, palindrome check (trims spaces, ignores case), case conversion
-- First/last 3 characters, unique character count
+- Input strings and run multiple text transformations
+- Reverse, length, case conversion, palindrome checks, prefix/suffix logic
+- Combine operations and inspect output clearly
 
 ### Sets
-- Manual set input or auto-generate from tree
-- Set A = left subtree + root, Set B = right subtree + root
-- Operations: union, intersection, difference, symmetric difference, cardinality
+- Work with custom sets or generated values
+- Perform union, intersection, difference, and symmetric difference
+- View cardinality and set relationships
 
-### DFA (Deterministic Finite Automaton)
-- Define custom DFAs with simple text format
-- Test strings against the DFA
-- View state trace and acceptance result
-- Default DFA included: accepts strings of even length
+### Regular Operations
+- Enter an expression with `*`, `+`, `|`, `( )` and concatenation
+- See the strings it generates, shortest first, up to a chosen length
 
 ## Run
 
 ```bash
 cd /path/to/Traversal-Toolkit
-flask/bin/python app.py  # or: python3 app.py (if dependencies installed)
+./flask/bin/python app.py
 ```
 
-Then open: `http://127.0.0.1:5000`
-
-## Setup (First Time)
+Or with a normal virtual environment:
 
 ```bash
-cd /path/to/Traversal-Toolkit
 python3 -m venv flask
-flask/bin/pip install -r requirements.txt
-flask/bin/python app.py
+./flask/bin/pip install -r requirements.txt
+./flask/bin/python app.py
 ```
 
-Or without venv:
+Then open:
 
-```bash
-pip install -r requirements.txt
-python3 app.py
+```text
+http://127.0.0.1:5000
 ```
 
-## Layout
+## Expression syntax
 
-- `app.py` – Flask app with `/api/analyze` endpoint
-- `traversal_toolkit/` – Core logic:
-  - `tree.py` – Binary tree building and traversals
-  - `text_ops.py` – String operations (concatenation, length, case, find/replace)
-  - `string_extra.py` – Extra string operations (prefix, suffix, reverse, palindrome)
-  - `set_ops.py` – Set operations (union, intersection, difference)
-  - `dfa.py` – DFA parser and simulator
-- `templates/index.html` – Web UI with collapsible sidebar
-- `static/app.js` – Frontend logic and page navigation
-- `static/style.css` – Responsive styling
-- `samples/examples.json` – Example trees
-- `tests/test_core.py` – Unit tests
+| Write | Meaning | Example | Produces |
+|---|---|---|---|
+| `AB` | concatenation | `AB` | AB |
+| `A*` | zero or more | `A*B` | B, AB, AAB, ... |
+| `A+` | one or more | `A+BC` | ABC, AABC, AAABC, ... |
+| `A\|B` | either one | `A\|BC` | A, BC |
+| `( )` | grouping | `(AB)+` | AB, ABAB, ... |
 
-## Input Format
-
-### Tree Traversals
-- Format: space-separated or comma-separated values, or single string with each char as a node
-- Examples:
-  - `A B D E C F` (space-separated)
-  - `A,B,C` (comma-separated)
-  - `ABCDEF` (each char is a node)
-- Rule: provide inorder + (preorder OR postorder). All node values must be unique.
-
-### Sets
-- Format: space-separated or comma-separated values
-- Example: `A B C` or `1,2,3`
-
-### DFA Definition
-```
-start: q0
-accept: q0 q1
-q0,a,q1
-q1,b,q0
-q0,*,q0
-```
-- `start:` – starting state
-- `accept:` – accepting states (comma-separated)
-- State transitions: `from_state,symbol,to_state` (use `*` for any symbol)
+Every character other than `| * + ( )` is a literal symbol. Use a backslash to match an operator literally, e.g. `\+`.
 
 ## Tests
 
 ```bash
-flask/bin/python -m pytest tests/
+./flask/bin/python -m pytest -q
 ```
 
-## UI Features
+## Notes
 
-- **Collapsible Sidebar** – Click ☰ to collapse/expand navigation
-- **Page-based Navigation** – Separate pages for Binary Tree, Text Operations, Sets, DFA
-- **Responsive Design** – Adapts to desktop, tablet, and mobile
-- **Centered Layouts** – Input forms and results centered on page
-- **Live Analysis** – Instant results as you input data
+The app has been restructured to support cleaner modular development while preserving the original educational toolkit behavior. The sidebar, tab separation, and dark styling are the main UI improvements, while the core toolkit logic remains focused on the original traversal and automata concepts.
 
-## Example: Text Operations
-
-1. Click "Text Operations" in sidebar
-2. Enter: `race car`
-3. Results show:
-   - Text, Length, Reversed, **Palindrome: Yes** (spaces trimmed, case ignored)
-   - Uppercase, Lowercase, etc.
-
-## Example: Binary Tree
-
-1. Click "Binary Tree" in sidebar
-2. Load example or enter traversals
-3. View tree diagram and properties
-4. Analyze with string/set/DFA tools

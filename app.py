@@ -18,7 +18,7 @@ def samples():
 
 @app.post("/api/analyze")
 def analyze():
-    d = request.get_json(force=True)
+    d = request.get_json(force=True) or {}
     try:
         root = tree.build(tree.tokens(d.get("pre", "")), tree.tokens(d.get("ino", "")),
                           tree.tokens(d.get("post", "")))
@@ -27,8 +27,6 @@ def analyze():
         join = lambda k: "".join(trav[k])
         a, b = tree.tokens(d.get("set_a", "")), tree.tokens(d.get("set_b", ""))
         da, db = set_ops.default_sets(root)
-        src = d.get("dfa_source", "preorder")
-        text = d.get("dfa_custom", "").strip() if src == "custom" else join(src)
         str_a_val = join(d.get("str_a", "preorder"))
         str_b_val = join(d.get("str_b", "postorder"))
         return jsonify(
@@ -43,9 +41,9 @@ def analyze():
 
 @app.post("/api/regex")
 def regex():
-    d = request.get_json(force=True)
+    d = request.get_json(force=True) or {}
     try:
-        return jsonify(regex_ops.run(d.get("regex", ""), d.get("text", "")))
+        return jsonify(regex_ops.generate(d.get("regex", ""), d.get("max_len", 6)))
     except ValueError as e:
         return jsonify(error=str(e)), 400
 
