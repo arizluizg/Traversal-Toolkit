@@ -10,7 +10,7 @@
 <header>
   <button id="toggle-sidebar" class="sidebar-toggle">☰</button>
   <h1>Automata Toolkit</h1>
-  <p>Enter tree traversals, then explore the tree, strings, sets and regular operations.</p>
+  <p>Explore expression trees, strings, sets and regular operations.</p>
 </header>
 <aside id="sidebar" class="sidebar open">
   <nav>
@@ -21,19 +21,7 @@
   </nav>
 </aside>
 <main>
-  <section id="page-tree" class="page active">
-    <div class="input">
-      <label>Preorder <input id="pre" placeholder="A B D E C F"></label>
-      <label>Inorder <input id="ino" placeholder="D B E A F C"></label>
-      <label>Postorder <input id="post" placeholder="D E B F C A"></label>
-      <div class="row">
-        <select id="example" aria-label="Examples"><option value="">Load an example</option></select>
-        <button id="go">Analyze</button>
-      </div>
-      <p id="error" role="alert"></p>
-    </div>
-    <div id="out-tree"><p class="hint">Analyze a tree to see it here.</p></div>
-  </section>
+  {% include 'toolkit/tree.html' %}
 
   {% include 'toolkit/text.html' %}
 
@@ -46,6 +34,5 @@
 <script src="{{ url_for('static', filename='text.js') }}"></script>
 <script src="{{ url_for('static', filename='set.js') }}"></script>
 <script src="{{ url_for('static', filename='regex.js') }}"></script>
-<script src="{{ url_for('static', filename='expr.js') }}"></script>
 </body>
 </html>
