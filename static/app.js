@@ -40,7 +40,7 @@ function drawTree(root, ino) {
 }
 
 async function analyzeTree() {
-  const body = {pre: $("#pre").value, ino: $("#ino").value, post: $("#post").value, str_a: "preorder", str_b: "postorder", find: "", set_a: "", set_b: "", dfa: $("#dfa").value, dfa_source: "preorder", dfa_custom: ""};
+  const body = {pre: $("#pre").value, ino: $("#ino").value, post: $("#post").value, str_a: "preorder", str_b: "postorder", find: "", set_a: "", set_b: ""};
   const res = await fetch("/api/analyze", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
   const d = await res.json();
   $("#error").textContent = d.error || "";
@@ -119,33 +119,10 @@ async function analyzeSets() {
   $("#out-set").innerHTML = table(ops);
 }
 
-async function analyzeDFA() {
-  const dfa_text = $("#dfa").value;
-  const test_str = $("#dfa_string").value;
-  
-  if (!test_str) {
-    $("#out-dfa").innerHTML = "<p class='hint'>Enter a test string.</p>";
-    return;
-  }
-  
-  const body = {dfa: dfa_text, dfa_source: "custom", dfa_custom: test_str, pre: "", ino: "", post: "", str_a: "preorder", str_b: "postorder", find: "", set_a: "", set_b: ""};
-  const res = await fetch("/api/analyze", {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
-  const d = await res.json();
-  
-  if (d.error) {
-    $("#out-dfa").innerHTML = `<p class="hint" style="color:var(--bad)">${esc(d.error)}</p>`;
-    return;
-  }
-  
-  $("#out-dfa").innerHTML = `<pre>${esc(d.dfa.trace.join("\n"))}</pre>` +
-    `<p class="${d.dfa.accepted ? "ok" : "no"}"><strong>${d.dfa.accepted ? "ACCEPTED" : "REJECTED"}</strong></p>`;
-}
-
 // Event listeners
 $("#go").onclick = analyzeTree;
 $("#text-analyze").onclick = analyzeText;
 $("#set-analyze").onclick = analyzeSets;
-$("#dfa-analyze").onclick = analyzeDFA;
 
 // Load examples
 fetch("/api/samples").then(r => r.json()).then(list => {

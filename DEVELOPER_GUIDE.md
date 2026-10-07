@@ -6,7 +6,7 @@ This project is organized so each feature tab has its own UI, its own frontend l
 
 ### Shared app shell
 - `app.py`  
-  Flask app entry point. Handles route rendering and the `/api/analyze` endpoint.
+  Flask app entry point. Handles route rendering and the `/api/analyze` and `/api/regex` endpoints.
 
 - `templates/index.html`  
   Main page shell. This is the top-level layout that includes the sidebar and the tab sections.
@@ -26,7 +26,7 @@ This project is organized so each feature tab has its own UI, its own frontend l
   - `tree.html`
   - `text.html`
   - `set.html`
-  - `dfa.html`
+  - `regex.html`
 
 - `static/tree.js`  
   Logic for the tree tab only.
@@ -37,8 +37,8 @@ This project is organized so each feature tab has its own UI, its own frontend l
 - `static/set.js`  
   Logic for the set operations tab only.
 
-- `static/dfa.js`  
-  Logic for the DFA tab only.
+- `static/regex.js`  
+  Logic for the Regular Operations tab only.
 
 - `traversal_toolkit/`  
   Python business logic for the toolkit modules.
@@ -46,7 +46,7 @@ This project is organized so each feature tab has its own UI, its own frontend l
   - `text_ops.py`
   - `string_extra.py`
   - `set_ops.py`
-  - `dfa.py`
+  - `regex_ops.py`
 
 ---
 
@@ -207,16 +207,15 @@ The files in `static/` are frontend handlers. They do not implement the actual a
 - send JSON to the Flask API
 - render the response back into the page
 
-### Example: `static/dfa.js`
-`dfa.js` does this:
+### Example: `static/regex.js`
+`regex.js` does this:
 
-- grabs the DFA definition textarea
-- grabs the test string input
-- sends both to `/api/analyze`
-- receives the trace and accepted/rejected result
-- writes the output into `#dfa-output`
+- reads the expression and the max-length slider
+- sends both to `/api/regex`
+- receives the generated strings and how the expression was grouped
+- writes the output into `#regex-output`
 
-It is only responsible for the DFA tab UI and request flow.
+It is only responsible for the Regular Operations tab UI and request flow.
 
 ### Example: `static/tree.js`
 `tree.js` does the same for tree operations:
@@ -225,7 +224,7 @@ It is only responsible for the DFA tab UI and request flow.
 - calls the Python tree logic through the API
 - displays traversal/output/tree structure
 
-This pattern is repeated for text and set tabs.
+This pattern is repeated for the text, set and regex tabs.
 
 ---
 
@@ -248,11 +247,10 @@ The files under `traversal_toolkit/` contain the actual algorithmic and data-pro
 ### `traversal_toolkit/set_ops.py`
 - performs union, intersection, difference, symmetric difference, cardinality
 
-### `traversal_toolkit/dfa.py`
-- parses DFA definitions
-- stores the transition table
-- simulates input strings through states
-- determines whether the final state is accepting
+### `traversal_toolkit/regex_ops.py`
+- parses expressions with `*`, `+`, `|`, `( )` and concatenation
+- generates the strings an expression produces, shortest first
+- builds an NFA and tests whether a string matches
 
 In short:
 - `static/*.js` = browser-side UI + API calls

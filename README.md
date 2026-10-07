@@ -1,6 +1,6 @@
 # Traversal Toolkit
 
-A modular web app for learning binary trees, string operations, sets, and deterministic finite automata. The project has been refactored into a cleaner tab-based layout with separate UI sections and independent per-tab logic, while keeping the core toolkit operations accessible from a single Flask app.
+A modular web app for learning binary trees, string operations, sets, and regular operations. The project has been refactored into a cleaner tab-based layout with separate UI sections and independent per-tab logic, while keeping the core toolkit operations accessible from a single Flask app.
 
 ## What was implemented
 
@@ -9,7 +9,7 @@ A modular web app for learning binary trees, string operations, sets, and determ
   - Binary Tree
   - Text Operations
   - Sets
-  - DFA
+  - Regular Operations
 - Split the interface into reusable template sections in `templates/toolkit/`
 - Split JavaScript behavior by tab into independent files in `static/`
 - Kept the shared app shell and styling in `static/app.js` and `static/style.css`
@@ -17,30 +17,29 @@ A modular web app for learning binary trees, string operations, sets, and determ
 
 ### Independent tab logic
 - Each tool section now has its own independent inputs and handlers
-- The tree tab no longer depends on DFA or shared form state
-- The DFA tab no longer depends on tree inputs or shared payload structure
+- The tree tab no longer depends on shared form state
+- The Regular Operations tab has its own input, script, and API route
 - This prevents cross-tab collisions and keeps each module easier to maintain
 
-### DFA behavior and parsing
-- Kept a simple DFA definition format based on state transitions
-- Supported accept-state parsing with either space or comma separation
-- Kept the default DFA flow consistent with a `q0 -> q1 -> qf` pattern structure
-- Included support for `*`-style transitions and standard trace output for each state change
+### Regular Operations
+- Type an expression such as `A+BC` and see the strings it produces (`ABC`, `AABC`, `AAABC`, ...)
+- Supports Kleene star `*`, Kleene plus `+`, alternation `|`, parentheses `( )`, and concatenation
+- Results are grouped by length, with a max-length slider because `*` and `+` repeat forever
+- Shows how the operators were grouped, and explains malformed expressions in plain language
 
 ### Styling update
 - Dark UI theme with readable contrast
 - Sidebar, cards, inputs, buttons, and output panels aligned for a consistent interface
-- Improved readability for DFA trace output and results panels
 
 ## Project structure
 
-- `app.py` – Flask entry point and `/api/analyze` routes
+- `app.py` – Flask entry point and `/api/analyze` and `/api/regex` routes
 - `traversal_toolkit/` – toolkit logic
   - `tree.py` – binary tree building and traversal logic
   - `text_ops.py` – string operations
   - `string_extra.py` – extra string utilities
   - `set_ops.py` – set operations
-  - `dfa.py` – DFA parsing, transitions, and simulation
+  - `regex_ops.py` – regular expression parsing and string generation
 - `templates/`
   - `index.html` – shell layout
   - `sidebar.html` – sidebar navigation
@@ -50,7 +49,7 @@ A modular web app for learning binary trees, string operations, sets, and determ
   - `tree.js` – tree tab logic
   - `text.js` – text tab logic
   - `set.js` – set tab logic
-  - `dfa.js` – DFA tab logic
+  - `regex.js` – Regular Operations tab logic
   - `style.css` – dark responsive styling
 - `samples/examples.json` – example data
 - `tests/test_core.py` – project tests and regression checks
@@ -72,11 +71,9 @@ A modular web app for learning binary trees, string operations, sets, and determ
 - Perform union, intersection, difference, and symmetric difference
 - View cardinality and set relationships
 
-### DFA (Deterministic Finite Automaton)
-- Define a DFA in text format
-- Test strings through transitions
-- View the trace from start to final state
-- Confirm accepted or rejected states
+### Regular Operations
+- Enter an expression with `*`, `+`, `|`, `( )` and concatenation
+- See the strings it generates, shortest first, up to a chosen length
 
 ## Run
 
@@ -99,20 +96,17 @@ Then open:
 http://127.0.0.1:5000
 ```
 
-## DFA format
+## Expression syntax
 
-```text
-start: q0
-accept: q1 qf
-q0,a,q1
-q1,b,qf
-qf,b,qf
-```
+| Write | Meaning | Example | Produces |
+|---|---|---|---|
+| `AB` | concatenation | `AB` | AB |
+| `A*` | zero or more | `A*B` | B, AB, AAB, ... |
+| `A+` | one or more | `A+BC` | ABC, AABC, AAABC, ... |
+| `A\|B` | either one | `A\|BC` | A, BC |
+| `( )` | grouping | `(AB)+` | AB, ABAB, ... |
 
-- `start:` defines the start state
-- `accept:` defines the accepting states
-- Each transition is written as `from_state,symbol,to_state`
-- Accept states may be separated by spaces or commas
+Every character other than `| * + ( )` is a literal symbol. Use a backslash to match an operator literally, e.g. `\+`.
 
 ## Tests
 

@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Traversal Toolkit</title>
+  <title>Automata Toolkit</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 <header>
   <button id="toggle-sidebar" class="sidebar-toggle">☰</button>
-  <h1>Traversal Toolkit</h1>
+  <h1>Automata Toolkit</h1>
   <p>Enter tree traversals, then explore the tree, strings, sets and regular operations.</p>
 </header>
 <aside id="sidebar" class="sidebar open">
@@ -17,7 +17,7 @@
     <button class="sidebar-item active" data-page="tree">Binary Tree</button>
     <button class="sidebar-item" data-page="text">Text Operations</button>
     <button class="sidebar-item" data-page="set">Sets</button>
-    <button class="sidebar-item" data-page="dfa">DFA</button>
+    <button class="sidebar-item" data-page="regex">Regular Operations</button>
   </nav>
 </aside>
 <main>
@@ -63,20 +63,12 @@
     <div id="out-set"></div>
   </section>
 
-  <section id="page-dfa" class="page">
-    <label>DFA definition <textarea id="dfa" spellcheck="false">{{ default_dfa }}</textarea></label>
-    <div class="row">
-      <label>Test string <input id="dfa_string" placeholder="Enter test string"></label>
-      <button id="dfa-analyze">Run DFA</button>
-    </div>
-    <p id="re_error" class="no" role="alert"></p>
-    <div id="out-re"></div>
-  </section>
+  {% include 'toolkit/regex.html' %}
 </main>
 <script src="{{ url_for('static', filename='app.js') }}"></script>
 <script src="{{ url_for('static', filename='tree.js') }}"></script>
 <script src="{{ url_for('static', filename='text.js') }}"></script>
 <script src="{{ url_for('static', filename='set.js') }}"></script>
-<script src="{{ url_for('static', filename='dfa.js') }}"></script>
+<script src="{{ url_for('static', filename='regex.js') }}"></script>
 </body>
 </html>
